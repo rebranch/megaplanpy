@@ -14,7 +14,7 @@
 from megaplanpy import Megaplan
 
 
-CODE = 'cp1251'
+CODE = 'utf-8'
 
 def PrintDict(D):
     tmpl1 = '{0}: {1}'
@@ -46,7 +46,7 @@ def main():
     mplan = Megaplan(account, login, password)
 
     print(' ' * 20 + 'TASK list view')
-    obj = mplan.GetTasks()
+    obj = mplan.Tasks()
     tasks = obj.data['tasks']
     for task in tasks:
         print('--------' * 10)
@@ -57,7 +57,7 @@ def main():
     if tasks:
         print('********' * 10)
         task_id = tasks[len(tasks) - 1]['Id']
-        obj = mplan.GetTaskCard(task_id)
+        obj = mplan.TaskCard(task_id)
         task_card = obj.data['task']
         PrintDict(task_card)
         print('********' * 10)
