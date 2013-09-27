@@ -51,6 +51,8 @@ class Megaplan(object):
     _TaskApi = 'BumsTaskApiV01/'
     _TimeApi = 'BumsTimeApiV01/'
     _TradeApi = 'BumsTradeApiV01/'
+    _CrmApi = 'BumsCrmApiV01/'
+    _InvoiceApi = 'BumsInvoiceApiV01/'
 
     AUTHORIZE = _CommonApi + 'User/'
     COMMENT = _CommonApi + 'Comment/'
@@ -65,6 +67,9 @@ class Megaplan(object):
     SEVERITY = _TaskApi + 'Severity/'
     TASK = _TaskApi + 'Task/'
     TODOLIST = _TimeApi + 'TodoList/'
+    CONTRACTOR = _CrmApi + 'Contractor/'
+    OFFER = _InvoiceApi + 'Offer/'
+
 
     code = 'utf-8'
 
@@ -981,6 +986,49 @@ class Megaplan(object):
         params = {'CommerceInfo': CommerceInfo}
         return self._GetData(uri, params)
 
+    def Contractor(self, **kwargs):
+        """
+        Редактирование/Создание клиента
+        input:
+            kwargs:
+                Id	integer	ID клиента, если не указан то будет создан новый клиент
+                Model[TypePerson]	string	Тип клиента, принимает значения: human и company
+                Model[FirstName]	string	Имя, обязательное если тип human
+                Model[LastName]	string	Фамилия, обязательное если тип human
+                Model[MiddleName]	string	Отчество, обязательное если тип human
+                Model[CompanyName]	string	Наименование компании, обязательное если тип company
+                Model[ParentCompany]	int	Id компании, используется для связи контактного лица с компанией
+                Model[Email]	string	Email
+                Model[Phones]	array	Массив телефонов*
+                Model[Birthday]	array	День основания компании или день рождения клиента, формат: Y-m-d (Пример: '1999-03-27')
+                Model[Responsibles]	string	Идентификаторы ответственных сотрудников перечисленных через запятую (Пример: '1000005,1013202')
+                Model[Имя_поля]	string	Значение расширенного поля контрагента с именем "Имя_поля" (список полей можно получить с помощью отдельного апи запроса
+        output:
+            Id	integer	ID клиента
+            PayerId	integer	ID автоматически созданного плательщика
+        """
+
+        uri = '{0}save.api'.format(self.CONTRACTOR)
+        return self._GetData(uri, kwargs)
+
+    def Deal(self, **kwargs):
+        """
+        input:
+            kwargs:
+                Id	integer	ID сделки, если не указан то будет создана новая сделка
+                ProgramId	integer	ID программы (схемы), обязательное при создании сделки поле (при редактировании игнорируется)
+                StatusId	integer	ID статуса сделки. Если не указан при создании сделки, то подбирается автоматически. Если указан при изменении сделки, то статус сделки будет изменён в зависимости от выставленного параметра StrictLogic.
+                StrictLogic	boolean	Строгая логика перехода из статуса в статус. По умолчанию: true. Если включена строгая логика, то для перехода в необходимый статус из текущего должен существовать переход, пользователь должен иметь на него права, отработают все триггеры. Если логика не включена, то статус просто изменится и всё.
+                Model[Manager]	integer	Идентификатор пользователя, являющегося менеджером сделки
+                Model[Contractor]	integer	Идентификатор клиента
+                Model[Contact]	integer	Идентификатор контактного лица
+                Model[Auditors]	string	Идентификаторы пользователей являющихся аудиторами по сделке. Id перечисляются через запятую (Пример: '1000005,1013202')
+                Model[Description]	string	Описание сделки. Принимается во внимание только в случае отсутствия у сделки позиций.
+                Model[Paid]	float	Заплачено (сумма должна быть передана в текущей базовой валюте системы)
+                Model[<Имя поля>]	mixed	Дополнительное поле, созданное пользователем (см. Получение списка доступных полей сделки).
+        """
+        uri = '{0}listFields.api'.format(self.DEAL)
+        return self._GetData(uri, kwargs)
 
 def main():
     pass
