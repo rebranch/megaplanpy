@@ -1027,7 +1027,7 @@ class Megaplan(object):
                 Model[Paid]	float	Заплачено (сумма должна быть передана в текущей базовой валюте системы)
                 Model[<Имя поля>]	mixed	Дополнительное поле, созданное пользователем (см. Получение списка доступных полей сделки).
         """
-        uri = '{0}listFields.api'.format(self.DEAL)
+        uri = '{0}save.api'.format(self.DEAL)
         return self._GetData(uri, kwargs)
 
 def main():
